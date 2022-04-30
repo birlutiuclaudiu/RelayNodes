@@ -42,6 +42,10 @@ public class Sender {
         String ipAddress = ipAddresses.get(new Random().nextInt(ipAddresses.size()));
         DataOutputStream out    = new DataOutputStream(this.socket.getOutputStream());
         out.writeUTF(ipAddress + "/" + value);
+        out.flush();
+        logger.log(Level.INFO, String.format("------------------------------------------------------>" +
+                        "SEND THE PAYLOAD %s to %s FROM %s", ipAddress + "/" + value, "127.0.0.1",
+                this.socket.getInetAddress().getHostAddress()));
     }
     public void closeSocket(){
         try {

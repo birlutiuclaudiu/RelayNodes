@@ -23,14 +23,18 @@ public class RelayNode {
         this.portNumber = portNumber;
         this.nextHopAddress = nextHopAddress;
         try {
-            logger.log(Level.INFO, String.format("Create server with ipAddrees %s and port %d", ipAddress, portNumber));
+            logger.log(Level.INFO, String.format("Creating server with ipAddrees %s and port %d...", ipAddress, portNumber));
             this.serverSocket = new ServerSocket();
             this.serverSocket.setReuseAddress(true);
             this.serverSocket.bind(new InetSocketAddress(this.ipAddress, this.portNumber));
+            logger.log(Level.INFO, String.format("Created server with ipAddress %s and port %d", ipAddress, portNumber));
+
+            //created thread for server
             onListeningThread = new MyThread();
             onListeningThread.start();
+
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            logger.log(Level.SEVERE, e.getMessage());
         }
     }
 
@@ -42,29 +46,40 @@ public class RelayNode {
             String splitCharacter = "/";
             String[] parts = payload.split(splitCharacter);
             if (parts[0].equals(this.ipAddress)) {
-                System.out.println("daaa");
-                System.out.println(this.serverSocket.toString());
+                logger.log(Level.INFO, String.format("-------------------------------------" +
+                                "----------------->MESSAGE FOR ME (%s) from %s : %s",
+                        serverSocket.getInetAddress().getHostAddress(),
+                        socket.getInetAddress().getHostAddress(),
+                        parts[1]));
             } else {
                 clientSendMessageToNextHop(payload);
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+
         }
 
     }
 
     private void clientSendMessageToNextHop(String payload) {
-
-        if (this.clientSocket == null) {
-            clientSocket = new Socket();
-            try {
-                clientSocket.bind(new InetSocketAddress(this.ipAddress, this.portNumber+1));
-                clientSocket.connect(new InetSocketAddress(nextHopAddress, 5002));
-                DataOutputStream out = new DataOutputStream(clientSocket.getOutputStream());
-                out.writeUTF(payload);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+        try {
+            //create the client socket and connect to the next hop if it not exists
+            if(clientSocket==null) {
+                clientSocket = new Socket();
+                clientSocket.setReuseAddress(true);
+                clientSocket.bind(new InetSocketAddress(this.ipAddress, this.portNumber + 1));
+                if (nextHopAddress != null)
+                    clientSocket.connect(new InetSocketAddress(nextHopAddress, this.portNumber + 1));
             }
+            DataOutputStream out = new DataOutputStream(clientSocket.getOutputStream());
+            out.writeUTF(payload);
+            out.flush();
+            logger.log(Level.INFO, String.format("-------------------------------------" +
+                            "----------------->HOP FROM ME (%s) to %s FOR PAYLOAD: %s",
+                    this.ipAddress,
+                    this.nextHopAddress,
+                    payload));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -82,24 +97,30 @@ public class RelayNode {
 
     }
 
+
     private class MyThread extends Thread {
         private boolean closed = false;
+
         @Override
         public void run() {
-            while (!closed) {
-                try {
-                    Socket socket = serverSocket.accept();
-                    System.out.println(socket.getInetAddress());
-                    DataInputStream in = new DataInputStream(
-                            new BufferedInputStream(socket.getInputStream()));
-                    new Thread(() -> onReceiveFromClient(socket)).start();
-                } catch (IOException e) {
-                    logger.log(Level.INFO, "Server not exist, it is closed");
-                }
+            try {
+                Socket socket = serverSocket.accept();
+                logger.log(Level.INFO, String.format("Connected with client %s",
+                        socket.getInetAddress().getHostAddress()));
+               while(!closed){
+                   onReceiveFromClient(socket);
+               }
+
+            } catch (IOException e) {
+                logger.log(Level.INFO, "Server not exist, it is closed");
             }
+
         }
+
         public void setClosed(Boolean closed) {
             this.closed = closed;
         }
     }
+
+
 }
