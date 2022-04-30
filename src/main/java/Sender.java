@@ -1,68 +1,54 @@
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.net.UnknownHostException;
+import java.util.List;
+import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+
+/**
+ * This class represents the sender, which is in fact a simple client
+ */
 public class Sender {
-
     private Socket socket         = null;
     private DataInputStream input = null;
     private DataOutputStream out  = null;
     private String ipAddress;
-    private int port;
+    private String nextHop;
+    private final int PORT = 5000;
 
-    public Sender(String ipAddress, int port)
-    {   this.ipAddress = ipAddress;
-        this.port = port;
-        // establish the connection to D1 destination
+    static final Logger logger = Logger.getLogger(String.valueOf(RelayNode.class));
+
+    public Sender(String ipAddress, String nextHop) {
+        this.ipAddress = ipAddress;
+        this.nextHop = nextHop;
         try
         {
-            this.socket = new Socket(this.ipAddress, this.port);
-            System.out.println("Connected");
-
-            // takes input from terminal
-            input  = new DataInputStream(System.in);
-
-            // sends output to the socket
-            out    = new DataOutputStream(socket.getOutputStream());
-        }
-        catch(UnknownHostException u)
-        {
-            System.out.println(u);
-        }
-        catch(IOException i)
-        {
-            System.out.println(i);
-        }
-
-        // string to read message from input
-        String line = "";
-
-        // keep reading until "Over" is input
-        while (!line.equals("Over"))
-        {
-            try
-            {
-                line = input.readLine();
-                out.writeUTF(line);
-            }
-            catch(IOException i)
-            {
-                System.out.println(i);
-            }
-        }
-
-        // close the connection
-        try
-        {
-            input.close();
-            out.close();
-            socket.close();
-        }
-        catch(IOException i)
-        {
-            System.out.println(i);
+            this.socket = new Socket();
+            socket.setReuseAddress(true);
+            socket.bind(new InetSocketAddress(this.ipAddress, PORT));
+            logger.log(Level.INFO, String.format("Created sender with ipAddress %s and port %d",this.ipAddress, PORT));
+            this.socket.connect(new InetSocketAddress(nextHop, PORT+1));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
+
+    public void sendMessage(List<String> ipAddresses, int value) throws IOException {
+        //randomly select an avaible address from list
+        String ipAddress = ipAddresses.get(new Random().nextInt(ipAddresses.size()));
+        DataOutputStream out    = new DataOutputStream(this.socket.getOutputStream());
+        out.writeUTF(ipAddress + "/" + value);
+    }
+    public void closeSocket(){
+        try {
+            this.socket.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }

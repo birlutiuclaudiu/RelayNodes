@@ -1,24 +1,32 @@
-import java.io.DataOutputStream;
+
 import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TestClass {
 
     public static void main(String[] args) {
-        RelayNode relayNode = new RelayNode("127.0.0.2", 5000);
-        Socket socket;
-        {
-            try {
-                socket = new Socket();
-                socket.bind(new InetSocketAddress("127.0.0.5",3000));
-                socket.connect(new InetSocketAddress("127.0.0.2", 5000));
-                DataOutputStream out    = new DataOutputStream(socket.getOutputStream());
-                out.writeUTF("127.0.0.1/" + "11213");
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+        List<String> destinationAddresses = new ArrayList<String>(List.of(new String[]
+                {"127.0.0.2",  "127.0.0.3"
+                }));
+
+        RelayNode relayNode = new RelayNode("127.0.0.2", 5001, "127.0.0.3");
+        RelayNode relayNode2 = new RelayNode("127.0.0.3", 5002, "127.0.0.4");
+        Sender sender = new Sender("127.0.0.15", "127.0.0.2");
+        try {
+            sender.sendMessage(destinationAddresses, 6);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
+        sender.closeSocket();
+        try {
+            relayNode2.close();
+            relayNode.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+
     }
 
 }
