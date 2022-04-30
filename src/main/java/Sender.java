@@ -13,25 +13,23 @@ import java.util.logging.Logger;
  * This class represents the sender, which is in fact a simple client
  */
 public class Sender {
-    private Socket socket         = null;
+    static final Logger logger = Logger.getLogger(String.valueOf(RelayNode.class));
+    private final int PORT = 5000;
+    private Socket socket = null;
     private DataInputStream input = null;
-    private DataOutputStream out  = null;
+    private DataOutputStream out = null;
     private String ipAddress;
     private String nextHop;
-    private final int PORT = 5000;
-
-    static final Logger logger = Logger.getLogger(String.valueOf(RelayNode.class));
 
     public Sender(String ipAddress, String nextHop) {
         this.ipAddress = ipAddress;
         this.nextHop = nextHop;
-        try
-        {
+        try {
             this.socket = new Socket();
             socket.setReuseAddress(true);
             socket.bind(new InetSocketAddress(this.ipAddress, PORT));
-            logger.log(Level.INFO, String.format("Created sender with ipAddress %s and port %d",this.ipAddress, PORT));
-            this.socket.connect(new InetSocketAddress(nextHop, PORT+1));
+            logger.log(Level.INFO, String.format("Created sender with ipAddress %s and port %d", this.ipAddress, PORT));
+            this.socket.connect(new InetSocketAddress(nextHop, PORT + 1));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -40,14 +38,15 @@ public class Sender {
     public void sendMessage(List<String> ipAddresses, int value) throws IOException {
         //randomly select an avaible address from list
         String ipAddress = ipAddresses.get(new Random().nextInt(ipAddresses.size()));
-        DataOutputStream out    = new DataOutputStream(this.socket.getOutputStream());
+        DataOutputStream out = new DataOutputStream(this.socket.getOutputStream());
         out.writeUTF(ipAddress + "/" + value);
         out.flush();
         logger.log(Level.INFO, String.format("------------------------------------------------------>" +
                         "SEND THE PAYLOAD %s to %s FROM %s", ipAddress + "/" + value, "127.0.0.1",
-                this.socket.getInetAddress().getHostAddress()));
+                this.ipAddress));
     }
-    public void closeSocket(){
+
+    public void closeSocket() {
         try {
             this.socket.close();
         } catch (IOException e) {

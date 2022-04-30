@@ -63,7 +63,7 @@ public class RelayNode {
     private void clientSendMessageToNextHop(String payload) {
         try {
             //create the client socket and connect to the next hop if it not exists
-            if(clientSocket==null) {
+            if (clientSocket == null) {
                 clientSocket = new Socket();
                 clientSocket.setReuseAddress(true);
                 clientSocket.bind(new InetSocketAddress(this.ipAddress, this.portNumber + 1));
@@ -107,9 +107,9 @@ public class RelayNode {
                 Socket socket = serverSocket.accept();
                 logger.log(Level.INFO, String.format("Connected with client %s",
                         socket.getInetAddress().getHostAddress()));
-               while(!closed){
-                   onReceiveFromClient(socket);
-               }
+                while (!closed) {
+                    onReceiveFromClient(socket);
+                }
 
             } catch (IOException e) {
                 logger.log(Level.INFO, "Server not exist, it is closed");
