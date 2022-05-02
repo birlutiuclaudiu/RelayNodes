@@ -66,9 +66,9 @@ public class RelayNode {
             if (clientSocket == null) {
                 clientSocket = new Socket();
                 clientSocket.setReuseAddress(true);
-                clientSocket.bind(new InetSocketAddress(this.ipAddress, this.portNumber + 1));
+                clientSocket.bind(new InetSocketAddress(this.ipAddress, this.portNumber+1 ));
                 if (nextHopAddress != null)
-                    clientSocket.connect(new InetSocketAddress(nextHopAddress, this.portNumber + 1));
+                    clientSocket.connect(new InetSocketAddress(nextHopAddress, this.portNumber));
             }
             DataOutputStream out = new DataOutputStream(clientSocket.getOutputStream());
             out.writeUTF(payload);

@@ -14,22 +14,23 @@ import java.util.logging.Logger;
  */
 public class Sender {
     static final Logger logger = Logger.getLogger(String.valueOf(RelayNode.class));
-    private final int PORT = 5000;
+    private int port;
     private Socket socket = null;
     private DataInputStream input = null;
     private DataOutputStream out = null;
     private String ipAddress;
     private String nextHop;
 
-    public Sender(String ipAddress, String nextHop) {
+    public Sender(String ipAddress, Integer port, String nextHop) {
         this.ipAddress = ipAddress;
         this.nextHop = nextHop;
+        this.port = port;
         try {
             this.socket = new Socket();
             socket.setReuseAddress(true);
-            socket.bind(new InetSocketAddress(this.ipAddress, PORT));
-            logger.log(Level.INFO, String.format("Created sender with ipAddress %s and port %d", this.ipAddress, PORT));
-            this.socket.connect(new InetSocketAddress(nextHop, PORT + 1));
+            socket.bind(new InetSocketAddress(this.ipAddress, port));
+            logger.log(Level.INFO, String.format("Created sender with ipAddress %s and port %d", this.ipAddress, port));
+            this.socket.connect(new InetSocketAddress(nextHop, port));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
