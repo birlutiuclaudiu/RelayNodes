@@ -40,7 +40,7 @@ public class RelayNode {
 
     private void onReceiveFromClient(Socket socket) {
         try {
-            DataInputStream in = new DataInputStream(
+            DataInputStream in= new DataInputStream(
                     new BufferedInputStream(socket.getInputStream()));
             String payload = in.readUTF();
             String splitCharacter = "/";
@@ -71,15 +71,15 @@ public class RelayNode {
                     clientSocket.connect(new InetSocketAddress(nextHopAddress, this.portNumber));
             }
             DataOutputStream out = new DataOutputStream(clientSocket.getOutputStream());
-            out.writeUTF(payload);
-            out.flush();
             logger.log(Level.INFO, String.format("-------------------------------------" +
                             "----------------->HOP FROM ME (%s) to %s FOR PAYLOAD: %s",
                     this.ipAddress,
                     this.nextHopAddress,
                     payload));
+            out.writeUTF(payload);
+            out.flush();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            logger.log(Level.SEVERE, String.format("Error transfer message from %s", this.ipAddress));
         }
     }
 
@@ -110,13 +110,10 @@ public class RelayNode {
                 while (!closed) {
                     onReceiveFromClient(socket);
                 }
-
             } catch (IOException e) {
                 logger.log(Level.INFO, "Server not exist, it is closed");
             }
-
         }
-
         public void setClosed(Boolean closed) {
             this.closed = closed;
         }

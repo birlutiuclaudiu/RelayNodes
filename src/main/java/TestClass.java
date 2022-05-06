@@ -18,7 +18,7 @@ public class TestClass {
         try {
             for (int i = 0; i < 10; i++) {
                 sender.sendMessage(destinationAddresses, i);
-                Thread.sleep(100);
+                Thread.sleep(50);
             }
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
