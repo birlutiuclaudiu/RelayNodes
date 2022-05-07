@@ -18,7 +18,7 @@ public class TransferSimulation {
         //START simulation to transfer data from sender to different destinations
         //sender transfer 100 integers to random destination D1, D2 or D3
         try {
-            for (int i = 0; i < 10; i++) {
+            for (int i = 0; i < 100; i++) {
                 sender.sendMessage(destinationAddresses, i);
                 Thread.sleep(50);
             }

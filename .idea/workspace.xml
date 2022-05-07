@@ -6,9 +6,11 @@
   <component name="ChangeListManager">
     <list default="true" id="ccb83e75-dda3-4438-a79f-91e273547efb" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BirlutiuClaudiu_RelayNode_Documentation.odt" beforeDir="false" afterPath="$PROJECT_DIR$/BirlutiuClaudiu_RelayNode_Documentation.odt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/RelayNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/RelayNode.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Sender.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Sender.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/TestClass.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/TransferSimulation.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/TransferSimulation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/TransferSimulation.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -38,6 +40,7 @@
   &quot;keyToString&quot;: {
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
     &quot;last_opened_file_path&quot;: &quot;/home/birlutiuclaudiu/Facultate/RC/RelayNodesConnection&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
@@ -46,6 +49,11 @@
     &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;
   }
 }</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+    </key>
+  </component>
   <component name="RunManager" selected="Application.TransferSimulation">
     <configuration name="Relay" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="Relay" />
@@ -89,7 +97,8 @@
       <workItem from="1651600176627" duration="30000" />
       <workItem from="1651656770945" duration="208000" />
       <workItem from="1651823237084" duration="198000" />
-      <workItem from="1651870025778" duration="5754000" />
+      <workItem from="1651870025778" duration="5903000" />
+      <workItem from="1651908865417" duration="4231000" />
     </task>
     <servers />
   </component>

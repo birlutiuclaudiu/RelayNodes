@@ -35,7 +35,7 @@ public class Sender {
     }
 
     public void sendMessage(List<String> ipAddresses, int value) throws IOException {
-        //randomly select an avaible address from list
+        //randomly select an available address from list
         String ipAddress = ipAddresses.get(new Random().nextInt(ipAddresses.size()));
         logger.log(Level.INFO, String.format("------------------------------------------------------>" +
                         "SEND THE PAYLOAD %s to %s FROM %s", ipAddress + "/" + value, this.nextHop,

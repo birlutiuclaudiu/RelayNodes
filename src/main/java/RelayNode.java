@@ -117,7 +117,7 @@ public class RelayNode {
         public void run() {
             try {
                 Socket socket = serverSocket.accept();
-                logger.log(Level.INFO, String.format("Connected with client %s",
+                logger.log(Level.INFO, String.format("%s connected with client %s", ipAddress,
                         socket.getInetAddress().getHostAddress()));
                 while (!closed) {
                     onReceiveFromClient(socket);
