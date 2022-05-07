@@ -8,6 +8,11 @@ import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * @Author Birlutiu Claudiu-Andrei
+ * This class is formed from a server and a client. The server received message from the client of left neighbor relay node
+ * and the client transfer message and is connected with the server of the right relay node neighbor.
+ */
 public class RelayNode {
 
     static final Logger logger = Logger.getLogger(String.valueOf(RelayNode.class));
@@ -18,6 +23,15 @@ public class RelayNode {
     private int portNumber;
     private MyThread onListeningThread;
 
+    /**
+     * Constructor
+     *
+     * @param ipAddress      the address of the realy node;
+     * @param portNumber     the port og the address
+     * @param nextHopAddress represents the address of the next right relay node; current destination is connected and could
+     *                       transfer message to the next right destination via Client current destination to Server of the
+     *                       next destination
+     */
     public RelayNode(String ipAddress, int portNumber, String nextHopAddress) {
         this.ipAddress = ipAddress;
         this.portNumber = portNumber;
@@ -29,10 +43,9 @@ public class RelayNode {
             this.serverSocket.bind(new InetSocketAddress(this.ipAddress, this.portNumber));
             logger.log(Level.INFO, String.format("Created server with ipAddress %s and port %d", ipAddress, portNumber));
 
-            //created thread for server
+            //created thread for server; to instantiate separately a relay-node in order to not block the main thread
             onListeningThread = new MyThread();
             onListeningThread.start();
-
         } catch (IOException e) {
             logger.log(Level.SEVERE, e.getMessage());
         }
@@ -40,7 +53,7 @@ public class RelayNode {
 
     private void onReceiveFromClient(Socket socket) {
         try {
-            DataInputStream in= new DataInputStream(
+            DataInputStream in = new DataInputStream(
                     new BufferedInputStream(socket.getInputStream()));
             String payload = in.readUTF();
             String splitCharacter = "/";
@@ -54,7 +67,7 @@ public class RelayNode {
             } else {
                 clientSendMessageToNextHop(payload);
             }
-        } catch (IOException e) {
+        } catch (IOException ignored) {
 
         }
 
@@ -66,7 +79,7 @@ public class RelayNode {
             if (clientSocket == null) {
                 clientSocket = new Socket();
                 clientSocket.setReuseAddress(true);
-                clientSocket.bind(new InetSocketAddress(this.ipAddress, this.portNumber+1 ));
+                clientSocket.bind(new InetSocketAddress(this.ipAddress, this.portNumber + 1));
                 if (nextHopAddress != null)
                     clientSocket.connect(new InetSocketAddress(nextHopAddress, this.portNumber));
             }
@@ -97,7 +110,6 @@ public class RelayNode {
 
     }
 
-
     private class MyThread extends Thread {
         private boolean closed = false;
 
@@ -114,10 +126,10 @@ public class RelayNode {
                 logger.log(Level.INFO, "Server not exist, it is closed");
             }
         }
+
         public void setClosed(Boolean closed) {
             this.closed = closed;
         }
     }
-
 
 }

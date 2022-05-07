@@ -16,7 +16,6 @@ public class Sender {
     static final Logger logger = Logger.getLogger(String.valueOf(RelayNode.class));
     private int port;
     private Socket socket = null;
-    private DataInputStream input = null;
     private String ipAddress;
     private String nextHop;
 
